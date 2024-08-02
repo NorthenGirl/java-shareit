@@ -48,7 +48,7 @@ public class Handler {
                 .body(new ErrorResponse(e.getMessage()));
     }
 
-  @ExceptionHandler
+    @ExceptionHandler
     @ResponseStatus(HttpStatus.CONFLICT)
     public ResponseEntity<ErrorResponse> handleAlreadyExistException(final DuplicateException e) {
         log.info("409 {}", e.getMessage());
