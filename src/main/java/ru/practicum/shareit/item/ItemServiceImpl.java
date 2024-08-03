@@ -16,27 +16,26 @@ import java.util.stream.Collectors;
 public class ItemServiceImpl implements ItemService {
     private final ItemRepository itemRepository;
     private final UserRepository userRepository;
-    private final ItemMapper itemMapper;
 
     @Override
-    public Item create(ItemDto itemDto) {
-        Item item = itemMapper.mapToItem(itemDto);
+    public ItemDto create(ItemDto itemDto) {
+        Item item = ItemMapper.mapToItem(itemDto);
         User owner = userRepository.getById(itemDto.getOwnerId()).orElseThrow(() -> {
             throw new NotFoundException(String.format("Пользователь с id %s не найден",itemDto.getOwnerId()));
         });
         item.setOwner(owner);
-        return itemRepository.create(item);
+        return ItemMapper.mapToItemDto(itemRepository.create(item));
     }
 
     @Override
-    public Item update(ItemDto itemDto) {
+    public ItemDto update(ItemDto itemDto) {
         validateUserId(itemDto.getOwnerId());
-        Item item = itemMapper.mapToItem(itemDto);
+        Item item = ItemMapper.mapToItem(itemDto);
         User owner = userRepository.getById(itemDto.getOwnerId()).orElseThrow(() -> {
             throw new NotFoundException(String.format("Пользователь с id %s не найден",itemDto.getOwnerId()));
         });
         item.setOwner(owner);
-        return itemRepository.update(item);
+        return ItemMapper.mapToItemDto(itemRepository.update(item));
     }
 
     @Override
@@ -48,7 +47,7 @@ public class ItemServiceImpl implements ItemService {
     public List<ItemDto> getAll(Long userId) {
         validateUserId(userId);
         return itemRepository.getAll(userId).stream()
-                .map(itemMapper::mapToItemDto)
+                .map(ItemMapper::mapToItemDto)
                 .collect(Collectors.toList());
     }
 
@@ -57,7 +56,7 @@ public class ItemServiceImpl implements ItemService {
         Item item = itemRepository.getById(id).orElseThrow(() -> {
             throw new NotFoundException(String.format("Вещь с id %s не найдена",id));
         });
-        return itemMapper.mapToItemDto(item);
+        return ItemMapper.mapToItemDto(item);
     }
 
     @Override
@@ -67,7 +66,7 @@ public class ItemServiceImpl implements ItemService {
         }
         return itemRepository.searchItems(text)
                 .stream()
-                .map(itemMapper::mapToItemDto)
+                .map(ItemMapper::mapToItemDto)
                 .collect(Collectors.toList());
     }
 

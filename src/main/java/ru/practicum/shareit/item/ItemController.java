@@ -17,29 +17,30 @@ import java.util.List;
 @RequestMapping("/items")
 public class ItemController {
     private final ItemService itemService;
+    public static final String X_SHARER_USER_ID = "X-Sharer-User-Id";
 
     @PostMapping
     @ResponseStatus(HttpStatus.OK)
-    public Item create(@RequestHeader("X-Sharer-User-Id") Long userId, @Validated({Create.class}) @RequestBody ItemDto itemDto) {
+    public ItemDto create(@RequestHeader(X_SHARER_USER_ID) Long userId, @Validated({Create.class}) @RequestBody ItemDto itemDto) {
         itemDto.setOwnerId(userId);
-        Item item = itemService.create(itemDto);
+        ItemDto item = itemService.create(itemDto);
         log.info("Вещь с id {} создана", item.getId());
         return item;
     }
 
     @PatchMapping("/{itemId}")
-    public Item update(@RequestHeader("X-Sharer-User-Id") Long userId,
+    public ItemDto update(@RequestHeader(X_SHARER_USER_ID) Long userId,
                        @Validated({Update.class}) @RequestBody ItemDto itemDto,
                        @PathVariable Long itemId) {
         itemDto.setId(itemId);
         itemDto.setOwnerId(userId);
-        Item item = itemService.update(itemDto);
+        ItemDto item = itemService.update(itemDto);
         log.info("Вещь с id {} обновлена", item.getId());
         return  item;
     }
 
     @GetMapping
-    public List<ItemDto> getAll(@RequestHeader("X-Sharer-User-Id") Long userId) {
+    public List<ItemDto> getAll(@RequestHeader(X_SHARER_USER_ID) Long userId) {
         List<ItemDto> itemDtoList = itemService.getAll(userId);
         log.info("Получен список вещей пользователя с id {}", userId);
         return itemDtoList;

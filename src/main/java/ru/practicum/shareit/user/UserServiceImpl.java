@@ -1,8 +1,8 @@
 package ru.practicum.shareit.user;
 
-import ru.practicum.shareit.exception.NotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import ru.practicum.shareit.exception.NotFoundException;
 import ru.practicum.shareit.user.dto.UserDto;
 
 import java.util.List;
@@ -12,16 +12,17 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
-    private final UserMapper userMapper;
 
     @Override
-    public User create(UserDto userDto) {
-        return  userRepository.create(userMapper.mapToUser(userDto));
+    public UserDto create(UserDto userDto) {
+        User user = userRepository.create(UserMapper.mapToUser(userDto));
+        return  UserMapper.mapToUserDto(user);
     }
 
     @Override
-    public User update(UserDto userDto) {
-        return userRepository.update(userMapper.mapToUser(userDto));
+    public UserDto update(UserDto userDto) {
+        User user = userRepository.update(UserMapper.mapToUser(userDto));
+        return UserMapper.mapToUserDto(user);
     }
 
     @Override
@@ -32,7 +33,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public List<UserDto> getAll() {
         return userRepository.getAll().stream()
-                .map(userMapper::mapToUserDto)
+                .map(UserMapper::mapToUserDto)
                 .collect(Collectors.toList());
     }
 
@@ -41,6 +42,6 @@ public class UserServiceImpl implements UserService {
         User user = userRepository.getById(id).orElseThrow(() -> {
             throw new NotFoundException(String.format("Пользователь с id %s не найден",id));
         });
-        return userMapper.mapToUserDto(user);
+        return UserMapper.mapToUserDto(user);
     }
 }

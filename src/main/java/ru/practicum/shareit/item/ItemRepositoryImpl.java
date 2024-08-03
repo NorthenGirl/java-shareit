@@ -15,8 +15,8 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class ItemRepositoryImpl implements ItemRepository {
     private final HashMap<Long, Item> items = new HashMap<>();
-    private  final HashMap<Long, List<Long>> itemsByUser = new HashMap<>();
-    private  Long id = 0L;
+    private final HashMap<Long, List<Long>> itemsByUser = new HashMap<>();
+    private Long id = 0L;
 
     @Override
     public Item create(Item item) {

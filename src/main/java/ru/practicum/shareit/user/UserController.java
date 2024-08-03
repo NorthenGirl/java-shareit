@@ -20,16 +20,16 @@ public class UserController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.OK)
-    public User create(@Validated({Create.class}) @RequestBody UserDto userDto) {
-        User user = userService.create(userDto);
+    public UserDto create(@Validated({Create.class}) @RequestBody UserDto userDto) {
+        UserDto user = userService.create(userDto);
         log.info("Пользователь с id {} создан", user.getId());
         return user;
     }
 
     @PatchMapping("/{userId}")
-    public User update(@Validated(Update.class) @RequestBody UserDto userDto, @PathVariable Long userId) {
+    public UserDto update(@Validated(Update.class) @RequestBody UserDto userDto, @PathVariable Long userId) {
         userDto.setId(userId);
-        User user = userService.update(userDto);
+        UserDto user = userService.update(userDto);
         log.info("Пользователь с id {} обновлен", user.getId());
         return user;
     }
